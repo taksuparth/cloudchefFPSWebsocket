@@ -2,6 +2,9 @@ import express from 'express';
 import configure from './routers';
 import { WebSocket, WebSocketServer } from 'ws';
 
+// util
+import { getResponseMessage } from './utils';
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -30,12 +33,11 @@ wss.on('connection', (ws: WebSocket) => {
   ws.on('message', (message: string, isBinary: boolean) => {
     console.log(`Received message: ${message}`);
 
-    // Process the received message here
-    wss.clients.forEach(client => {
-      if (ws !== client && client.readyState === WebSocket.OPEN) {
-        client.send(message, { binary: isBinary });
-      }
-    });
+    const responseMessage = getResponseMessage(message);
+
+    if (responseMessage) {
+      ws.send(responseMessage, { binary: isBinary });
+    }
   });
 
   ws.on('close', () => {
