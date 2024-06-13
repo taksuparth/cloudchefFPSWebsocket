@@ -30,10 +30,12 @@ wss.on('connection', (ws: WebSocket) => {
   ws.on('error', onSocketPostError);
   console.log('New WebSocket connection');
 
-  ws.on('message', (message: string, isBinary: boolean) => {
+  ws.on('message', async (message: string, isBinary: boolean) => {
     console.log(`Received message: ${message}`);
 
-    const responseMessage = getResponseMessage(message);
+    const responseMessage = await getResponseMessage(message);
+
+    console.log(`Sending message: ${responseMessage}`);
 
     if (responseMessage) {
       ws.send(responseMessage, { binary: isBinary });

@@ -216,16 +216,17 @@ const getRecipesList = () => {
     },
   ];
 
-  return getNetworkMessage('receiverId', 'senderId', 'getCompatibleRecipes', payload, 'taskId');
+  return getNetworkMessage('receiverId', 'senderId', 'setCompatibleRecipes', payload, 'taskId');
 };
 
-export const getResponseMessage = (recievedMessage: string): string | undefined => {
+export const getResponseMessage = async (recievedMessage: string): Promise<string | undefined> => {
   const parsedRecievedMessage = JSON.parse(recievedMessage);
 
   let messageToSend;
-  if (recievedMessage === 'getCompatibleRecipes') {
+  if (parsedRecievedMessage.function === 'getCompatibleRecipes') {
     messageToSend = getRecipesList();
-  } else if (recievedMessage === 'canStartRecipe') {
+  } else if (parsedRecievedMessage.function === 'canStartRecipe') {
+    await new Promise(resolve => setTimeout(resolve, 2000)); // Simulating a delay
     messageToSend = getStartRecipe(parsedRecievedMessage.taskId);
   }
 
