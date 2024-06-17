@@ -4,6 +4,7 @@ import { WebSocket, WebSocketServer } from 'ws';
 
 // util
 import { getResponseMessage } from './utils';
+import readline from 'readline';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -61,4 +62,30 @@ expressServer.on('upgrade', (request, socket, head) => {
     socket.removeListener('error', onSocketPreError);
     wss.emit('connection', ws, request);
   });
+});
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+rl.on('line', input => {
+  // Check if the input matches the specific key press
+  console.log('Input:', input);
+  const [fn, payload] = input.split(' ');
+
+  switch (fn) {
+    case 'updateStepTimer':
+      wss.clients.forEach(ws =>
+        ws.send(JSON.stringify({ function: 'updateStepTimer', payload: { stepIndex: 1, stepTime: payload } }))
+      );
+      break;
+    case 'startCountdown':
+      wss.clients.forEach(ws =>
+        ws.send(JSON.stringify({ function: 'startCountdown', payload: { stepIndex: 1, stepTime: payload } }))
+      );
+      break;
+    default:
+      console.log('Invalid input: ', input);
+  }
 });
