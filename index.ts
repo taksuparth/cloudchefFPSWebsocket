@@ -85,6 +85,12 @@ rl.on('line', input => {
         ws.send(JSON.stringify({ function: 'startCountdown', payload: { stepIndex: 1, stepTime: payload } }))
       );
       break;
+    case 'updateInputContainerData':
+      const parsedPayload = JSON.parse(JSON.parse(payload));
+      wss.clients.forEach(ws =>
+        ws.send(JSON.stringify({ function: 'updateInputContainerData', payload: parsedPayload }))
+      );
+      break;
     default:
       console.log('Invalid input: ', input);
   }
