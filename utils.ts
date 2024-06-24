@@ -26,10 +26,14 @@ const getStartRecipe = (taskId: string) => {
       containerIds: ['barcode_1', 'barcode_2'],
       media: {
         textInstruction: 'Tag all Containers',
-        videoURl: 'some url',
+        images: [
+          'https://images.unsplash.com/photo-1575936123452-b67c3203c357?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          'https://images.unsplash.com/photo-1517329782449-810562a4ec2f?q=80&w=2063&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          'https://images.unsplash.com/photo-1613323593608-abc90fec84ff?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        ],
       },
       stepIndex: 5,
-      stepTime: 20,
+      stepTime: 5,
       type: 'add',
     },
     {
@@ -38,10 +42,20 @@ const getStartRecipe = (taskId: string) => {
       type: 'wait_time',
     },
     {
+      stepIndex: 7,
+      stepTime: 100,
+      type: 'wait_temperature',
+    },
+    {
+      stepIndex: 7,
+      stepTime: 100,
+      type: 'wait_power',
+    },
+    {
       containerIds: ['barcode_3', 'barcode_4'],
       media: {
         textInstruction: 'Tag all Containers',
-        videoURl: 'some url 2',
+        videoUrl: 'https://youtu.be/SMX6u8wT8Ss',
       },
       stepIndex: 9,
       stepTime: 20,

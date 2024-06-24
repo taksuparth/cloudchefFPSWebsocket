@@ -75,9 +75,9 @@ rl.on('line', input => {
   const [fn, payload] = input.split(' ');
 
   switch (fn) {
-    case 'updateStepTimer':
+    case 'updateStepTime':
       wss.clients.forEach(ws =>
-        ws.send(JSON.stringify({ function: 'updateStepTimer', payload: { stepIndex: 1, stepTime: payload } }))
+        ws.send(JSON.stringify({ function: 'updateStepTime', payload: { stepIndex: 1, stepTime: payload } }))
       );
       break;
     case 'startCountdown':
