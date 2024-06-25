@@ -13,6 +13,7 @@ const getStartRecipe = (taskId: string) => {
       accessoryIds: ['9031105', '9031105', '9031106', 'accessoryId3'],
       media: {
         textInstruction: 'Tag all Containers',
+        videoUrl: 'http://192.168.29.192:3999/videos/test3.mp4',
       },
       stepIndex: 2,
       stepTime: 20,
@@ -37,9 +38,25 @@ const getStartRecipe = (taskId: string) => {
       type: 'add',
     },
     {
+      media: {
+        textInstruction: 'Stir to mix',
+        videoURL: 'some url',
+      },
+      instruction: 'Stir to mix',
+      stepIndex: 13,
+      stepTime: 10,
+      type: 'stir',
+    },
+    {
       stepIndex: 7,
       stepTime: 100,
-      type: 'wait_time',
+      type: 'stir_chunks',
+      stirChunkTimes: [
+        [4, 4],
+        [5, 5],
+        [3, 4],
+        [5, 4],
+      ],
     },
     {
       stepIndex: 7,
