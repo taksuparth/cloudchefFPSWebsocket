@@ -33,6 +33,10 @@ wss.on('connection', (ws: WebSocket) => {
 
   ws.on('message', async (message: string, isBinary: boolean) => {
     console.log(`Received message: ${message}`);
+    const parsedMessage = JSON.parse(message);
+    if (parsedMessage.function !== 'getCompatibleRecipes') {
+      ws.send(JSON.stringify({ function: 'ack', messageId: parsedMessage.messageId }), { binary: isBinary });
+    }
 
     const responseMessage = await getResponseMessage(message);
 
