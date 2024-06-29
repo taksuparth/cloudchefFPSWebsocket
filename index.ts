@@ -34,15 +34,12 @@ wss.on('connection', (ws: WebSocket) => {
   ws.on('message', async (message: string, isBinary: boolean) => {
     console.log(`Received message: ${message}`);
     const parsedMessage = JSON.parse(message);
-    if (parsedMessage.function !== 'getCompatibleRecipes') {
-      ws.send(JSON.stringify({ function: 'ack', messageId: parsedMessage.messageId }), { binary: isBinary });
-    }
+    ws.send(JSON.stringify({ function: 'ack', messageId: parsedMessage.messageId }), { binary: isBinary });
 
     const responseMessage = await getResponseMessage(message);
 
-    console.log(`Sending message: ${responseMessage}`);
-
     if (responseMessage) {
+      console.log(`Sending message: ${responseMessage}`);
       ws.send(responseMessage, { binary: isBinary });
     }
   });
@@ -75,7 +72,6 @@ const rl = readline.createInterface({
 
 rl.on('line', input => {
   // Check if the input matches the specific key press
-  console.log('Input:', input);
   const [fn, payload] = input.split(' ');
 
   switch (fn) {

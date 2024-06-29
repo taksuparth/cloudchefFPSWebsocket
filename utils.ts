@@ -250,14 +250,14 @@ const getRecipesList = () => {
   return getNetworkMessage('receiverId', 'senderId', 'setCompatibleRecipes', payload, 'taskId');
 };
 
-export const getResponseMessage = async (recievedMessage: string): Promise<string | undefined> => {
+// Ideally this function would be an async function, as we will have database calls and everything in here
+export const getResponseMessage = (recievedMessage: string): string | undefined => {
   const parsedRecievedMessage = JSON.parse(recievedMessage);
 
   let messageToSend;
   if (parsedRecievedMessage.function === 'getCompatibleRecipes') {
     messageToSend = getRecipesList();
   } else if (parsedRecievedMessage.function === 'canStartRecipe') {
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Simulating a delay
     messageToSend = getStartRecipe(parsedRecievedMessage.taskId);
   }
 
