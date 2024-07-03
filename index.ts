@@ -8,6 +8,7 @@ import readline from 'readline';
 
 const app = express();
 const port = process.env.PORT || 3000;
+let counter = 0;
 
 configure(app);
 
@@ -34,9 +35,13 @@ wss.on('connection', (ws: WebSocket) => {
   ws.on('message', async (message: string, isBinary: boolean) => {
     console.log(`Received message: ${message}`);
     const parsedMessage = JSON.parse(message);
+    if (parsedMessage.function === 'ack') {
+      return;
+    }
+
     ws.send(JSON.stringify({ function: 'ack', messageId: parsedMessage.messageId }), { binary: isBinary });
 
-    const responseMessage = await getResponseMessage(message);
+    const responseMessage = await getResponseMessage(message, (counter++).toString());
 
     if (responseMessage) {
       console.log(`Sending message: ${responseMessage}`);
@@ -77,18 +82,35 @@ rl.on('line', input => {
   switch (fn) {
     case 'updateStepTime':
       wss.clients.forEach(ws =>
-        ws.send(JSON.stringify({ function: 'updateStepTime', payload: { stepIndex: 1, stepTime: payload } }))
+        ws.send(
+          JSON.stringify({
+            messageId: counter++,
+            function: 'updateStepTime',
+            payload: { stepIndex: 1, stepTime: payload },
+          })
+        )
       );
       break;
     case 'startCountdown':
       wss.clients.forEach(ws =>
-        ws.send(JSON.stringify({ function: 'startCountdown', payload: { stepIndex: 1, stepTime: payload } }))
+        ws.send(
+          JSON.stringify({
+            messageId: counter++,
+            function: 'startCountdown',
+            payload: { stepIndex: 1, stepTime: payload },
+          })
+        )
       );
       break;
     case 'updateInputContainerData':
       const parsedPayload = JSON.parse(JSON.parse(payload));
       wss.clients.forEach(ws =>
-        ws.send(JSON.stringify({ function: 'updateInputContainerData', payload: parsedPayload }))
+        ws.send(JSON.stringify({ messageId: counter++, function: 'updateInputContainerData', payload: parsedPayload }))
+      );
+      break;
+    case 'deleteRecipe':
+      wss.clients.forEach(ws =>
+        ws.send(JSON.stringify({ messageId: counter++, function: 'deleteRecipe', taskId: payload }))
       );
       break;
     default:

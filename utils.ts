@@ -1,13 +1,21 @@
-const getNetworkMessage = (receiverId: string, senderId: string, func: string, payload: any, taskId: string): string =>
+const getNetworkMessage = (
+  receiverId: string,
+  senderId: string,
+  func: string,
+  payload: any,
+  taskId: string,
+  messageId: string
+): string =>
   JSON.stringify({
     receiverId,
     senderId,
     function: func,
     payload,
     taskId,
+    messageId,
   });
 
-const getStartRecipe = (taskId: string) => {
+const getStartRecipe = (taskId: string, messageId: string) => {
   const recipeSteps = [
     {
       accessoryIds: ['9031105', '9031105', '9031106', 'accessoryId3'],
@@ -210,10 +218,10 @@ const getStartRecipe = (taskId: string) => {
     accessoriesData: accessoriesData,
   };
 
-  return getNetworkMessage('receiverId', 'senderId', 'startRecipe', payload, taskId);
+  return getNetworkMessage('receiverId', 'senderId', 'startRecipe', payload, taskId, messageId);
 };
 
-const getRecipesList = () => {
+const getRecipesList = (messageId: string) => {
   const payload = [
     {
       recipe_name: 'Recipe Name 1',
@@ -247,18 +255,18 @@ const getRecipesList = () => {
     },
   ];
 
-  return getNetworkMessage('receiverId', 'senderId', 'setCompatibleRecipes', payload, 'taskId');
+  return getNetworkMessage('receiverId', 'senderId', 'setCompatibleRecipes', payload, 'taskId', messageId);
 };
 
 // Ideally this function would be an async function, as we will have database calls and everything in here
-export const getResponseMessage = (recievedMessage: string): string | undefined => {
+export const getResponseMessage = (recievedMessage: string, messageId: string): string | undefined => {
   const parsedRecievedMessage = JSON.parse(recievedMessage);
 
   let messageToSend;
   if (parsedRecievedMessage.function === 'getCompatibleRecipes') {
-    messageToSend = getRecipesList();
+    messageToSend = getRecipesList(messageId);
   } else if (parsedRecievedMessage.function === 'canStartRecipe') {
-    messageToSend = getStartRecipe(parsedRecievedMessage.taskId);
+    messageToSend = getStartRecipe(parsedRecievedMessage.taskId, messageId);
   }
 
   return messageToSend;
